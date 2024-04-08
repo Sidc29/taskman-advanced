@@ -34,7 +34,6 @@ import {
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 
-import DeleteAlertDialog from "./AlertDialogBox";
 import CustomDropdownMenuSub from "./CustomDropdownMenuSub";
 import { labels, statuses, priorities } from "../constants/comboboxData";
 const TaskList = ({
@@ -329,52 +328,18 @@ const TaskList = ({
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="text-red-600"
-                      onClick={() => setOpenDeleteDialog(true)}
+                      onClick={() => deleteTask(index)}
                     >
                       <Trash className="mr-2 h-4 w-4" />
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                {/* Delete Alert Dialog */}
-                <DeleteAlertDialog
-                  index={index}
-                  open={openDeleteDialog}
-                  setOpen={setOpenDeleteDialog}
-                  triggerFunction={deleteTask}
-                  type="Delete"
-                  description="This action cannot be undone. This will permanently delete your
-                  task."
-                  buttonColorCSS="bg-danger-600 hover:bg-danger-700"
-                />
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      {/* {!noResultsFound && tasks.length === 0 && (
-        <div className="flex items-center justify-center my-12">
-          <div className="flex flex-col items-center gap-1 text-center">
-            <h3 className="text-2xl font-bold tracking-tight">
-              You have no tasks currently
-            </h3>
-            <p className="text-sm text-muted-foreground w-3/4">
-              Feel free to begin adding tasks, including details such as their
-              status, priority, and labels. You can also edit or delete tasks as
-              needed.
-            </p>
-          </div>
-        </div>
-      )}
-      {noResultsFound && (
-        <div className="flex items-center justify-center my-12">
-          <div className="flex flex-col items-center gap-1 text-center">
-            <h3 className="text-2xl font-bold tracking-tight">
-              No tasks found for this query
-            </h3>
-          </div>
-        </div>
-      )} */}
       {!noResultsFound && tasks.length === 0 ? (
         <div className="flex items-center justify-center my-12">
           <div className="flex flex-col items-center gap-1 text-center">
@@ -392,7 +357,7 @@ const TaskList = ({
         noResultsFound && (
           <div className="flex items-center justify-center my-12">
             <div className="flex flex-col items-center gap-1 text-center">
-              <h3 className="text-2xl font-bold tracking-tight">
+              <h3 className="text-xl font-bold tracking-tight">
                 No tasks found for this query
               </h3>
             </div>
