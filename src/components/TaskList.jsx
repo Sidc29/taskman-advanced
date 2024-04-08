@@ -25,7 +25,7 @@ import {
   ArrowUp,
   ArrowUpCircle,
   HelpCircle,
-  Circle,
+  Pen,
   CheckCircle2,
   XCircle,
   Trash,
@@ -100,7 +100,7 @@ const TaskList = ({
     } else if (task.status === "Todo") {
       return (
         <div className="flex row items-center">
-          <Circle className="opacity-40 mr-2 h-10 w-4" />
+          <Pen className="opacity-40 mr-2 h-10 w-4" />
           <span>{task.status ? task.status : "-"}</span>
         </div>
       );
