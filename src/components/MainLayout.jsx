@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskInputForm from "./TaskInputForm";
 import TaskList from "./TaskList";
+import { Input } from "@/components/ui/input";
 
 export function MainLayout() {
   const [inputValue, setInputValue] = useState("");
@@ -10,6 +11,9 @@ export function MainLayout() {
   const [tasks, setTasks] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+  const [query, setQuery] = useState("");
+  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [noResultsFound, setNoResultsFound] = useState(false);
 
   const handleInputReset = () => {
     setInputValue("");
@@ -51,11 +55,22 @@ export function MainLayout() {
     }
   };
 
+  useEffect(() => {
+    const filtered = tasks.filter((item) =>
+      item.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredTasks(filtered);
+
+    // Check if there are no results
+    const noResults = filtered.length === 0 && query !== "";
+    setNoResultsFound(noResults);
+  }, [tasks, query]);
+
   return (
     <>
-      <div>
+      <div className="w-[1000px] flex-col justify-center m-auto">
         <TaskInputForm
-          tasks={tasks}
+          tasks={filteredTasks}
           addTask={addTask}
           inputValue={inputValue}
           setInputValue={setInputValue}
@@ -71,8 +86,14 @@ export function MainLayout() {
           handleInputReset={handleInputReset}
           handleEditReset={handleEditReset}
         />
+        <Input
+          className="w-fit relative top-12"
+          placeholder="Search for tasks..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
         <TaskList
-          tasks={tasks}
+          tasks={filteredTasks}
           setTasks={setTasks}
           setInputValue={setInputValue}
           setInputStatus={setInputStatus}
@@ -80,6 +101,7 @@ export function MainLayout() {
           setInputLabel={setInputLabel}
           setEditMode={setEditMode}
           setEditIndex={setEditIndex}
+          noResultsFound={noResultsFound}
         />
       </div>
     </>
