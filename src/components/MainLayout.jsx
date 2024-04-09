@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import TaskInputForm from "./TaskInputForm";
 import TaskList from "./TaskList";
-import { Input } from "@/components/ui/input";
+import TaskFilters from "./TaskFilters";
 
 export function MainLayout() {
   const [inputValue, setInputValue] = useState("");
@@ -86,12 +86,7 @@ export function MainLayout() {
           handleInputReset={handleInputReset}
           handleEditReset={handleEditReset}
         />
-        <Input
-          className="w-fit relative top-12"
-          placeholder="Search for tasks..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+        <TaskFilters query={query} setQuery={setQuery} />
         <TaskList
           tasks={filteredTasks}
           setTasks={setTasks}

@@ -35,7 +35,7 @@ const TaskInputForm = ({
         type="text"
         onChange={(e) => setInputValue(e.target.value)}
         value={inputValue}
-        placeholder="Add a Task"
+        placeholder="Add a Task..."
         required
       />
       <CustomCombox

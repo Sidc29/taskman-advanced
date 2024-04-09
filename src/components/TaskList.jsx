@@ -28,12 +28,11 @@ import {
   Pen,
   CheckCircle2,
   XCircle,
-  Trash,
   Edit,
 } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
-
+import DeleteAlertDialog from "./DeleteAlertDialog";
 import CustomDropdownMenuSub from "./CustomDropdownMenuSub";
 import { labels, statuses, priorities } from "../constants/comboboxData";
 const TaskList = ({
@@ -50,7 +49,6 @@ const TaskList = ({
   setEditIndex,
   noResultsFound,
 }) => {
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [labelOpen, setLabelOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
   const [priorityOpen, setPriorityOpen] = useState(false);
@@ -69,6 +67,11 @@ const TaskList = ({
       title: "Task Deleted",
       description: "Task has been deleted successfully",
     });
+    // Close dropdown menu after task deletion
+    setSelectedIndex(null);
+    setLabelOpen(false);
+    setStatusOpen(false);
+    setPriorityOpen(false);
   };
 
   // Editing a Task
@@ -326,13 +329,14 @@ const TaskList = ({
                       value={inputPriority}
                     />
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      className="text-red-600"
-                      onClick={() => deleteTask(index)}
-                    >
-                      <Trash className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
+
+                    <DeleteAlertDialog
+                      index={index}
+                      triggerFunction={deleteTask}
+                      desc={`This action cannot be undone. This will permanently delete your
+                     task.`}
+                      btnText="Yes"
+                    />
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
