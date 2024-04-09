@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { statuses, priorities, labels } from "../constants/comboboxData";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import MultiSelect from "./MultiSelect";
+import MultiSelect from "./MultiSelectFilter";
 import { useEffect, useState } from "react";
 
 const TaskFilters = ({
@@ -20,17 +20,19 @@ const TaskFilters = ({
   const [filtersActive, setFiltersActive] = useState(false);
 
   const ResetFilters = () => {
-    setQuery("");
     setSelectedStatus([]);
     setSelectedPriority([]);
+    setSelectedLabel([]);
   };
 
   // To check if filters have been selected
   useEffect(() => {
     const filtersActived =
-      selectedStatus?.length > 0 || selectedPriority?.length > 0;
+      selectedStatus?.length > 0 ||
+      selectedPriority?.length > 0 ||
+      selectedLabel?.length > 0;
     setFiltersActive(filtersActived);
-  }, [selectedStatus, selectedPriority]);
+  }, [selectedStatus, selectedPriority, selectedLabel]);
 
   return (
     <>
@@ -45,7 +47,6 @@ const TaskFilters = ({
         />
         <MultiSelect
           disabled={tasks?.length === 0 && !noResultsFound}
-          tasks={tasks}
           type="Status"
           data={statuses}
           selectedFilter={selectedStatus}
@@ -54,7 +55,6 @@ const TaskFilters = ({
         />
         <MultiSelect
           disabled={tasks?.length === 0 && !noResultsFound}
-          tasks={tasks}
           type="Priority"
           data={priorities}
           selectedFilter={selectedPriority}
@@ -63,7 +63,6 @@ const TaskFilters = ({
         />
         <MultiSelect
           disabled={tasks?.length === 0 && !noResultsFound}
-          tasks={tasks}
           type="Label"
           data={labels}
           selectedFilter={selectedLabel}

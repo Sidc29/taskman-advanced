@@ -29,6 +29,7 @@ import {
   CheckCircle2,
   XCircle,
   Edit,
+  Copy,
 } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
@@ -107,6 +108,17 @@ const TaskList = ({
     setInputStatus(tasks[taskIndex].status);
     setInputPriority(tasks[taskIndex].priority);
     setInputLabel(tasks[taskIndex].label);
+  };
+
+  // Function to copy a task
+  const copyTask = (index) => {
+    const taskToCopy = tasks[index];
+    const newTask = { ...taskToCopy, name: taskToCopy.name };
+    setTasks([...tasks, newTask]);
+    toast({
+      title: "Task Copied",
+      description: "Task has been copied successfully ",
+    });
   };
 
   // To render status icons
@@ -353,6 +365,12 @@ const TaskList = ({
                       value={inputLabel}
                     />
                     <DropdownMenuSeparator />
+                    {/* Copy a task*/}
+                    <DropdownMenuItem onClick={() => copyTask(index)}>
+                      <Copy className="mr-2 h-4 w-4" />
+                      Make a Copy
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                     <DeleteAlertDialog
                       index={index}
                       triggerFunction={deleteTask}
@@ -375,8 +393,7 @@ const TaskList = ({
             </h3>
             <p className="text-sm text-muted-foreground w-3/4">
               Feel free to begin adding tasks, including details such as their
-              status, priority, and labels. You can also edit or delete tasks as
-              needed.
+              status, priority, and labels.
             </p>
           </div>
         </div>

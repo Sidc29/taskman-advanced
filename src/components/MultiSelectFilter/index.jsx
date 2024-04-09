@@ -17,13 +17,11 @@ import {
 } from "@/components/ui/popover";
 
 const MultiSelect = ({
-  tasks,
   type,
   data,
   selectedFilter,
   setSelectedFilter,
   disabled = false,
-  noResultsFound,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -54,7 +52,7 @@ const MultiSelect = ({
             <Filter className="h-4 w-4" />
             {type}
             {selectedFilter?.length > 0 && <Separator orientation="vertical" />}
-            {selectedFilter?.length > 2 ? (
+            {selectedFilter?.length > 1 ? (
               <Badge className="rounded-sm" variant="secondary">
                 {selectedFilter?.length + " " + "selected"}
               </Badge>
