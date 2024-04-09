@@ -4,7 +4,7 @@ import {
   ArrowRight,
   Clock,
   CheckCircle2,
-  Pen,
+  ListTodo,
   HelpCircle,
   XCircle,
 } from "lucide-react";
@@ -24,7 +24,7 @@ export const statuses = [
   {
     value: "Todo",
     label: "Todo",
-    icon: Pen,
+    icon: ListTodo,
   },
   {
     value: "Done",
