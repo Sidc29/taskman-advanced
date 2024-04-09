@@ -329,7 +329,6 @@ const TaskList = ({
                       value={inputPriority}
                     />
                     <DropdownMenuSeparator />
-
                     <DeleteAlertDialog
                       index={index}
                       triggerFunction={deleteTask}
@@ -362,7 +361,7 @@ const TaskList = ({
           <div className="flex items-center justify-center my-12">
             <div className="flex flex-col items-center gap-1 text-center">
               <h3 className="text-xl font-bold tracking-tight">
-                No tasks found for this query
+                No tasks found
               </h3>
             </div>
           </div>

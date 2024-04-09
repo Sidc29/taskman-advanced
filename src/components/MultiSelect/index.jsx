@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { Filter } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -16,7 +16,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const MultiSelect = ({ type, data, selectedFilter, setSelectedFilter }) => {
+const MultiSelect = ({
+  tasks,
+  type,
+  data,
+  selectedFilter,
+  setSelectedFilter,
+}) => {
   const [open, setOpen] = useState(false);
 
   const toggleFilter = (filterOption) => {
@@ -31,38 +37,57 @@ const MultiSelect = ({ type, data, selectedFilter, setSelectedFilter }) => {
 
   // Clear filters
   const clearFilters = () => {
-    setSelectedFilter([]);
+    setSelectedFilter([]); // Clear the selected status
   };
 
   return (
-    <div className="border border-dashed flex items-center gap-2 rounded-md">
+    <>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button className="flex gap-2 justify-between" variant="ghost">
-            <PlusCircle className="h-4 w-4" />
+          <Button
+            className="flex gap-2 justify-between border border-dashed"
+            variant="ghost"
+          >
+            <Filter className="h-4 w-4" />
             {type}
+            {selectedFilter?.length > 0 && <Separator orientation="vertical" />}
+            {selectedFilter?.length > 2 ? (
+              <Badge className="rounded-sm" variant="secondary">
+                {selectedFilter?.length + " " + "selected"}
+              </Badge>
+            ) : (
+              selectedFilter?.map((filterOption, index) => (
+                <Badge key={index} className="rounded-sm" variant="secondary">
+                  {filterOption}
+                </Badge>
+              ))
+            )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[150px] p-0">
+        <PopoverContent className="w-[200px] p-0" side="down" align="start">
           <Command>
             <CommandList>
               <CommandGroup>
                 {data?.map((dataItem, index) => (
                   <div key={index}>
                     <CommandItem
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 justify-between"
                       value={dataItem.value}
                       onSelect={(currentValue) => {
                         toggleFilter(currentValue);
                       }}
                     >
-                      <Checkbox
-                        checked={selectedFilter?.includes(dataItem.value)}
-                        onChange={() => {
-                          toggleFilter(dataItem.value);
-                        }}
-                      />
-                      {dataItem.label}
+                      <div className="flex gap-2">
+                        <Checkbox
+                          checked={selectedFilter?.includes(dataItem.value)}
+                          onChange={() => {
+                            toggleFilter(dataItem.value);
+                          }}
+                        />
+                        {dataItem.icon && <dataItem.icon className="h-4 w-4" />}
+                        {dataItem.label}
+                      </div>
+                      {/* TO DO - COUNT OCCURENCES */}
                     </CommandItem>
                     {index === data?.length - 1 &&
                       selectedFilter?.length > 0 && (
@@ -85,18 +110,7 @@ const MultiSelect = ({ type, data, selectedFilter, setSelectedFilter }) => {
           </Command>
         </PopoverContent>
       </Popover>
-      {selectedFilter?.length > 2 ? (
-        <Badge className="rounded-sm" variant="secondary">
-          {selectedFilter?.length + " " + "selected"}
-        </Badge>
-      ) : (
-        selectedFilter?.map((filterOption, index) => (
-          <Badge key={index} className="rounded-sm" variant="secondary">
-            {filterOption}
-          </Badge>
-        ))
-      )}
-    </div>
+    </>
   );
 };
 

@@ -6,6 +6,7 @@ import MultiSelect from "./MultiSelect";
 import { useEffect, useState } from "react";
 
 const TaskFilters = ({
+  tasks,
   query,
   setQuery,
   selectedStatus,
@@ -21,14 +22,12 @@ const TaskFilters = ({
     setSelectedPriority([]);
   };
 
+  // To check if filters have been selected
   useEffect(() => {
-    // To check if filters have been selected
     const filtersActived =
       selectedStatus?.length > 0 || selectedPriority?.length > 0;
     setFiltersActive(filtersActived);
   }, [selectedStatus, selectedPriority]);
-
-  console.log(filtersActive);
 
   return (
     <>
@@ -41,12 +40,14 @@ const TaskFilters = ({
           onChange={(e) => setQuery(e.target.value)}
         />
         <MultiSelect
+          tasks={tasks}
           type="Status"
           data={statuses}
           selectedFilter={selectedStatus}
           setSelectedFilter={setSelectedStatus}
         />
         <MultiSelect
+          tasks={tasks}
           type="Priority"
           data={priorities}
           selectedFilter={selectedPriority}
