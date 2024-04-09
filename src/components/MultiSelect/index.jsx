@@ -22,6 +22,8 @@ const MultiSelect = ({
   data,
   selectedFilter,
   setSelectedFilter,
+  disabled = false,
+  noResultsFound,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -45,6 +47,7 @@ const MultiSelect = ({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+            disabled={disabled}
             className="flex gap-2 justify-between border border-dashed"
             variant="ghost"
           >

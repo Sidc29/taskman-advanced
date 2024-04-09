@@ -204,7 +204,7 @@ const TaskList = ({
   }, [sortOrder]); // Trigger sort when sortOrder changes
 
   return (
-    <div className="w-[1000px] m-auto border border-1 rounded-t-lg">
+    <div className="w-[1000px] m-0 border border-1 rounded-t-lg">
       <Toaster />
       <Table>
         <TableHeader>
@@ -297,17 +297,6 @@ const TaskList = ({
                       Edit
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {/* Apply Label */}
-                    <CustomDropdownMenuSub
-                      type="Apply Label"
-                      placeholder="Search labels..."
-                      taskItem={taskItem}
-                      triggerFunction={handleApplyLabel}
-                      setOpen={setLabelOpen}
-                      index={index}
-                      data={labels}
-                      value={inputLabel}
-                    />
                     {/* Apply Status */}
                     <CustomDropdownMenuSub
                       type="Apply Status"
@@ -328,6 +317,17 @@ const TaskList = ({
                       data={priorities}
                       value={inputPriority}
                     />
+                    {/* Apply Label */}
+                    <CustomDropdownMenuSub
+                      type="Apply Label"
+                      placeholder="Search labels..."
+                      taskItem={taskItem}
+                      triggerFunction={handleApplyLabel}
+                      setOpen={setLabelOpen}
+                      index={index}
+                      data={labels}
+                      value={inputLabel}
+                    />
                     <DropdownMenuSeparator />
                     <DeleteAlertDialog
                       index={index}
@@ -347,7 +347,7 @@ const TaskList = ({
         <div className="flex items-center justify-center my-12">
           <div className="flex flex-col items-center gap-1 text-center">
             <h3 className="text-2xl font-bold tracking-tight">
-              You have no tasks currently
+              You have no tasks right now
             </h3>
             <p className="text-sm text-muted-foreground w-3/4">
               Feel free to begin adding tasks, including details such as their

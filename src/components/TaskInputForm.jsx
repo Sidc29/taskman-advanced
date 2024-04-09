@@ -28,7 +28,7 @@ const TaskInputForm = ({
 
   return (
     <form
-      className="flex w-[1000px] items-center space-x-2 justify-center m-auto mt-10"
+      className="flex items-center space-x-2 justify-center w-[1000px] m-0"
       onSubmit={editMode ? saveTask : addTask}
     >
       <Input

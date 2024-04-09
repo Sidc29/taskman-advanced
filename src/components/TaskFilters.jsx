@@ -13,6 +13,7 @@ const TaskFilters = ({
   setSelectedStatus,
   selectedPriority,
   setSelectedPriority,
+  noResultsFound,
 }) => {
   const [filtersActive, setFiltersActive] = useState(false);
 
@@ -31,8 +32,9 @@ const TaskFilters = ({
 
   return (
     <>
-      <div className="flex w-full items-center space-x-2 mt-11 mb-3">
+      <div className="flex items-center space-x-2 mt-11 mb-3 w-[1000px]">
         <Input
+          disabled={tasks?.length === 0 && !noResultsFound}
           className="w-56"
           type="text"
           placeholder="Search for tasks..."
@@ -40,18 +42,22 @@ const TaskFilters = ({
           onChange={(e) => setQuery(e.target.value)}
         />
         <MultiSelect
+          disabled={tasks?.length === 0 && !noResultsFound}
           tasks={tasks}
           type="Status"
           data={statuses}
           selectedFilter={selectedStatus}
           setSelectedFilter={setSelectedStatus}
+          noResultsFound={noResultsFound}
         />
         <MultiSelect
+          disabled={tasks?.length === 0 && !noResultsFound}
           tasks={tasks}
           type="Priority"
           data={priorities}
           selectedFilter={selectedPriority}
           setSelectedFilter={setSelectedPriority}
+          noResultsFound={noResultsFound}
         />
 
         {filtersActive && (
