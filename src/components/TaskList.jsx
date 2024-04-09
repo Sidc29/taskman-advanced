@@ -235,6 +235,7 @@ const TaskList = ({
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Task ID</TableHead>
+
             <TableHead
               onClick={() => {
                 setSortBy("name");
@@ -268,6 +269,7 @@ const TaskList = ({
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TableHead>
+            <TableHead className="w-[100px]">Label</TableHead>
             <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -275,25 +277,22 @@ const TaskList = ({
           {tasks.map((taskItem, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium">{index + 1}</TableCell>
+
               <TableCell className="font-medium">
-                <div className="flex gap-2">
-                  <span>
-                    {taskItem.label ? (
-                      <Badge className="rounded-md" variant="outline">
-                        {taskItem.label}
-                      </Badge>
-                    ) : (
-                      ""
-                    )}
-                  </span>
-                  <span>{taskItem.name}</span>
-                </div>
+                <span>{taskItem.name}</span>
               </TableCell>
               <TableCell className="font-medium ">
                 {taskItem.status ? getStatusData(taskItem) : "-"}
               </TableCell>
               <TableCell className="font-medium">
                 {taskItem.priority ? getPriorityData(taskItem) : "-"}
+              </TableCell>
+              <TableCell className="font-medium">
+                {taskItem.label ? (
+                  <Badge className="rounded-md">{taskItem.label}</Badge>
+                ) : (
+                  ""
+                )}
               </TableCell>
               <TableCell>
                 <DropdownMenu

@@ -87,10 +87,11 @@ const MultiSelect = ({
                             toggleFilter(dataItem.value);
                           }}
                         />
-                        {dataItem.icon && <dataItem.icon className="h-4 w-4" />}
+                        {dataItem.icon && (
+                          <dataItem.icon className="h-4 w-4 opacity-40" />
+                        )}
                         {dataItem.label}
                       </div>
-                      {/* TO DO - COUNT OCCURENCES */}
                     </CommandItem>
                     {index === data?.length - 1 &&
                       selectedFilter?.length > 0 && (

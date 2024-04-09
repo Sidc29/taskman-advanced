@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { statuses, priorities } from "../constants/comboboxData";
+import { statuses, priorities, labels } from "../constants/comboboxData";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import MultiSelect from "./MultiSelect";
@@ -14,6 +14,8 @@ const TaskFilters = ({
   selectedPriority,
   setSelectedPriority,
   noResultsFound,
+  selectedLabel,
+  setSelectedLabel,
 }) => {
   const [filtersActive, setFiltersActive] = useState(false);
 
@@ -57,6 +59,15 @@ const TaskFilters = ({
           data={priorities}
           selectedFilter={selectedPriority}
           setSelectedFilter={setSelectedPriority}
+          noResultsFound={noResultsFound}
+        />
+        <MultiSelect
+          disabled={tasks?.length === 0 && !noResultsFound}
+          tasks={tasks}
+          type="Label"
+          data={labels}
+          selectedFilter={selectedLabel}
+          setSelectedFilter={setSelectedLabel}
           noResultsFound={noResultsFound}
         />
 

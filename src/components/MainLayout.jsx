@@ -20,6 +20,7 @@ export function MainLayout() {
   const [noResultsFound, setNoResultsFound] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState([]);
   const [selectedPriority, setSelectedPriority] = useState([]);
+  const [selectedLabel, setSelectedLabel] = useState([]);
 
   const { toast } = useToast();
 
@@ -99,7 +100,9 @@ export function MainLayout() {
       const matchesPriority =
         selectedPriority.length === 0 ||
         selectedPriority.includes(item.priority);
-      return matchesQuery && matchesStatus && matchesPriority;
+      const matchesLabel =
+        selectedLabel.length === 0 || selectedLabel.includes(item.label);
+      return matchesQuery && matchesStatus && matchesPriority && matchesLabel;
     });
     setFilteredTasks(filtered);
 
@@ -108,9 +111,10 @@ export function MainLayout() {
       filtered.length === 0 &&
       (query !== "" ||
         selectedStatus.length > 0 ||
-        selectedPriority.length > 0);
+        selectedPriority.length > 0 ||
+        selectedLabel.length > 0);
     setNoResultsFound(noResults);
-  }, [tasks, query, selectedStatus, selectedPriority]);
+  }, [tasks, query, selectedStatus, selectedPriority, selectedLabel]);
 
   return (
     <>
@@ -143,6 +147,8 @@ export function MainLayout() {
           setSelectedStatus={setSelectedStatus}
           selectedPriority={selectedPriority}
           setSelectedPriority={setSelectedPriority}
+          selectedLabel={selectedLabel}
+          setSelectedLabel={setSelectedLabel}
           noResultsFound={noResultsFound}
         />
         <TaskList
