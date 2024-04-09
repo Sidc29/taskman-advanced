@@ -92,16 +92,16 @@ export function MainLayout() {
   useEffect(() => {
     const filtered = tasks?.filter((item) => {
       // Filter by name and selected statuses
-      const matchesQuery = item.name
+      const matchesQuery = item?.name
         .toLowerCase()
         .includes(query.toLowerCase());
       const matchesStatus =
-        selectedStatus.length === 0 || selectedStatus.includes(item.status);
+        selectedStatus.length === 0 || selectedStatus.includes(item?.status);
       const matchesPriority =
         selectedPriority.length === 0 ||
         selectedPriority.includes(item.priority);
       const matchesLabel =
-        selectedLabel.length === 0 || selectedLabel.includes(item.label);
+        selectedLabel.length === 0 || selectedLabel.includes(item?.label);
       return matchesQuery && matchesStatus && matchesPriority && matchesLabel;
     });
     setFilteredTasks(filtered);
