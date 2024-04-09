@@ -46,6 +46,7 @@ const CustomDropdownMenuSub = ({
             <CommandGroup>
               {data.map((dataItem, dataItemIndex) => (
                 <CommandItem
+                  className="justify-between"
                   key={dataItemIndex}
                   value={value}
                   onSelect={(value) => {
@@ -53,9 +54,17 @@ const CustomDropdownMenuSub = ({
                     setOpen(false);
                   }}
                 >
+                  <div className="flex items-center">
+                    {dataItem.icon && (
+                      <dataItem.icon
+                        className={cn("mr-2 h-4 w-4 opacity-40")}
+                      />
+                    )}
+                    <span>{dataItem.label}</span>
+                  </div>
                   <Check
                     className={cn(
-                      "mr-2 h-4 w-4",
+                      "h-4 w-4",
                       taskItem.label === dataItem.label ||
                         taskItem.status === dataItem.label ||
                         taskItem.priority === dataItem.label
@@ -63,7 +72,6 @@ const CustomDropdownMenuSub = ({
                         : "opacity-0"
                     )}
                   />
-                  {dataItem.label}
                 </CommandItem>
               ))}
             </CommandGroup>

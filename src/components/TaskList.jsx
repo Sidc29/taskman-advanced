@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import DeleteAlertDialog from "./DeleteAlertDialog";
 import CustomDropdownMenuSub from "./CustomDropdownMenuSub";
 import { labels, statuses, priorities } from "../constants/comboboxData";
@@ -55,6 +56,9 @@ const TaskList = ({
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
+  const [deletedTask, setDeletedTask] = useState(null);
+  const [deletedTaskIndex, setDeletedTaskIndex] = useState(null);
+  const [restoreTask, setRestoreTask] = useState(false);
 
   const { toast } = useToast();
 
@@ -62,10 +66,17 @@ const TaskList = ({
   const deleteTask = (toDeleteIndex) => {
     const tasksCopy = [...tasks];
     tasksCopy.splice(toDeleteIndex, 1);
+    setDeletedTask(tasks[toDeleteIndex]);
+    setDeletedTaskIndex(toDeleteIndex);
     setTasks(tasksCopy);
     toast({
       title: "Task Deleted",
-      description: "Task has been deleted successfully",
+      description: "Task has been deleted successfully ",
+      action: (
+        <ToastAction onClick={() => setRestoreTask(true)} altText="Undo">
+          Undo
+        </ToastAction>
+      ),
     });
     // Close dropdown menu after task deletion
     setSelectedIndex(null);
@@ -73,6 +84,20 @@ const TaskList = ({
     setStatusOpen(false);
     setPriorityOpen(false);
   };
+
+  const undoDeleteTask = () => {
+    if (deletedTask) {
+      const tasksCopy = [...tasks];
+      tasksCopy.splice(deletedTaskIndex, 0, deletedTask);
+      setTasks(tasksCopy);
+      setDeletedTask(null);
+      setRestoreTask(false);
+    }
+  };
+
+  useEffect(() => {
+    undoDeleteTask();
+  }, [restoreTask]);
 
   // Editing a Task
   const editTask = (taskIndex) => {
