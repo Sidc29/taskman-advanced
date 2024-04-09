@@ -11,7 +11,7 @@ export function MainLayout() {
   const [inputPriority, setInputPriority] = useState("");
   const [inputLabel, setInputLabel] = useState("");
   const [tasks, setTasks] = useState(
-    JSON.parse(localStorage.getItem("tasks") || [])
+    JSON.parse(localStorage.getItem("tasks")) || 0
   );
   const [editMode, setEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
