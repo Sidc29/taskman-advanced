@@ -10,7 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 const CustomCombox = ({
@@ -29,6 +29,12 @@ const CustomCombox = ({
     setSelectedStatus({});
   }, [tasks]);
 
+  const clearSelection = () => {
+    setSelectedStatus({});
+    setValue("");
+    setOpen(false);
+  };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -41,9 +47,18 @@ const CustomCombox = ({
           {value
             ? data.find((dataItem) => dataItem.value === value)?.label
             : placeholder}
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+
+          <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
+      <div>
+        {selectedStatus.value === value && (
+          <XCircle
+            className="h-4 w-4 cursor-pointer"
+            onClick={clearSelection}
+          />
+        )}
+      </div>
       <PopoverContent className="w-[150px] p-0">
         <Command>
           <CommandList>

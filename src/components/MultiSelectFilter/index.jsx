@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";

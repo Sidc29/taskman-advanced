@@ -27,63 +27,71 @@ const TaskInputForm = ({
   const [labelOpen, setLabelOpen] = useState(false);
 
   return (
-    <form
-      className="flex items-center space-x-2 justify-center w-[1000px] m-0"
-      onSubmit={editMode ? saveTask : addTask}
-    >
-      <Input
-        type="text"
-        onChange={(e) => setInputValue(e.target.value)}
-        value={inputValue}
-        placeholder="Add a Task..."
-        required
-      />
-      <CustomCombox
-        tasks={tasks}
-        value={inputStatus}
-        setValue={setInputStatus}
-        open={inputStatusOpen}
-        setOpen={setInputStatusOpen}
-        data={statuses}
-        placeholder="Select Status"
-        icon={true}
-      />
-      <CustomCombox
-        tasks={tasks}
-        value={inputPriority}
-        setValue={setInputPriority}
-        open={priorityOpen}
-        setOpen={setPriorityOpen}
-        data={priorities}
-        placeholder="Select Priority"
-        icon={true}
-      />
-      <CustomCombox
-        value={inputLabel}
-        setValue={setInputLabel}
-        open={labelOpen}
-        setOpen={setLabelOpen}
-        data={labels}
-        placeholder="Select Label"
-      />
-      {editMode ? (
-        <div className="flex justify-center gap-2">
-          <Button type="submit">Save</Button>
-          <Button
-            variant="outline"
-            type="submit"
-            onClick={() => {
-              setEditMode(false);
-              handleInputReset();
-              handleEditReset();
-            }}
-          >
-            Cancel
-          </Button>
-        </div>
-      ) : (
-        <Button type="submit">Add</Button>
-      )}
+    <form className="flex flex-col" onSubmit={editMode ? saveTask : addTask}>
+      <div className="flex gap-2 w-[1000px]">
+        <Input
+          type="text"
+          onChange={(e) => setInputValue(e.target.value)}
+          value={inputValue}
+          placeholder="Add a Task..."
+          required
+        />
+        <CustomCombox
+          tasks={tasks}
+          value={inputStatus}
+          setValue={setInputStatus}
+          open={inputStatusOpen}
+          setOpen={setInputStatusOpen}
+          data={statuses}
+          placeholder="Select Status"
+          icon={true}
+        />
+        <CustomCombox
+          tasks={tasks}
+          value={inputPriority}
+          setValue={setInputPriority}
+          open={priorityOpen}
+          setOpen={setPriorityOpen}
+          data={priorities}
+          placeholder="Select Priority"
+          icon={true}
+        />
+        <CustomCombox
+          value={inputLabel}
+          setValue={setInputLabel}
+          open={labelOpen}
+          setOpen={setLabelOpen}
+          data={labels}
+          placeholder="Select Label"
+        />
+      </div>
+      <div className="mt-5">
+        {editMode ? (
+          <div className="flex gap-2">
+            <Button className="w-[500px]" type="submit">
+              Save
+            </Button>
+            <Button
+              className="w-[500px]"
+              variant="outline"
+              type="submit"
+              onClick={() => {
+                setEditMode(false);
+                handleInputReset();
+                handleEditReset();
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <Button className="w-[1000px]" type="submit">
+              Add
+            </Button>
+          </div>
+        )}
+      </div>
     </form>
   );
 };

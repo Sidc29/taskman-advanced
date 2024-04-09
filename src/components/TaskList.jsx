@@ -113,7 +113,7 @@ const TaskList = ({
   // Function to copy a task
   const copyTask = (index) => {
     const taskToCopy = tasks[index];
-    const newTask = { ...taskToCopy, name: taskToCopy.name };
+    const newTask = { ...taskToCopy };
     setTasks([...tasks, newTask]);
     toast({
       title: "Task Copied",
