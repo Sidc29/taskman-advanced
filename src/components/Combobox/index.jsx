@@ -70,8 +70,14 @@ const CustomCombox = ({
                   onSelect={(currentValue) => {
                     const isSelected =
                       selectedStatus && selectedStatus.value === dataItem.value;
-                    setSelectedStatus(isSelected ? null : dataItem);
-                    setValue(isSelected ? "" : currentValue);
+                    // If the clicked option is already selected, do nothing
+                    if (isSelected) {
+                      setOpen(false);
+                      return;
+                    }
+                    // Otherwise, update the selected status and value
+                    setSelectedStatus(dataItem);
+                    setValue(currentValue);
                     setOpen(false);
                   }}
                 >
@@ -85,7 +91,6 @@ const CustomCombox = ({
                       )}
                     />
                   )}
-
                   {dataItem.label}
                 </CommandItem>
               ))}

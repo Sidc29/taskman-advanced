@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Filter } from "lucide-react";
+import { ListFilter } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -49,7 +49,7 @@ const MultiSelect = ({
             className="flex gap-2 justify-between border border-dashed"
             variant="ghost"
           >
-            <Filter className="h-4 w-4" />
+            <ListFilter className="h-4 w-4" />
             {type}
             {selectedFilter?.length > 0 && <Separator orientation="vertical" />}
             {selectedFilter?.length > 1 ? (

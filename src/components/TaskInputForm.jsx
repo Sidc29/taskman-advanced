@@ -28,7 +28,7 @@ const TaskInputForm = ({
 
   return (
     <form className="flex flex-col" onSubmit={editMode ? saveTask : addTask}>
-      <div className="flex gap-2 w-[1000px]">
+      <div className="flex gap-2 w-[1000px] items-center">
         <Input
           type="text"
           onChange={(e) => setInputValue(e.target.value)}

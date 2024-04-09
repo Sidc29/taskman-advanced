@@ -2,7 +2,7 @@ import {
   ArrowUp,
   ArrowDown,
   ArrowRight,
-  ArrowUpCircle,
+  Clock,
   CheckCircle2,
   Pen,
   HelpCircle,
@@ -14,7 +14,7 @@ export const statuses = [
   {
     value: "In Progress",
     label: "In Progress",
-    icon: ArrowUpCircle,
+    icon: Clock,
   },
   {
     value: "Backlog",
@@ -62,6 +62,10 @@ export const labels = [
   {
     value: "Work",
     label: "Work",
+  },
+  {
+    value: "Enhancement",
+    label: "Enhancement",
   },
   {
     value: "Personal",
