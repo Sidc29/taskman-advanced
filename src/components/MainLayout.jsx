@@ -14,6 +14,8 @@ export function MainLayout() {
   const [query, setQuery] = useState("");
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [noResultsFound, setNoResultsFound] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState([]);
+  const [selectedPriority, setSelectedPriority] = useState([]);
 
   const handleInputReset = () => {
     setInputValue("");
@@ -55,16 +57,30 @@ export function MainLayout() {
     }
   };
 
+  // Filtering tasks
   useEffect(() => {
-    const filtered = tasks.filter((item) =>
-      item.name.toLowerCase().includes(query.toLowerCase())
-    );
+    const filtered = tasks.filter((item) => {
+      // Filter by name and selected statuses
+      const matchesQuery = item.name
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      const matchesStatus =
+        selectedStatus.length === 0 || selectedStatus.includes(item.status);
+      const matchesPriority =
+        selectedPriority.length === 0 ||
+        selectedPriority.includes(item.priority);
+      return matchesQuery && matchesStatus && matchesPriority;
+    });
     setFilteredTasks(filtered);
 
-    // Check if there are no results
-    const noResults = filtered.length === 0 && query !== "";
+    // Check if there are no results based on both query and selected statuses
+    const noResults =
+      filtered.length === 0 &&
+      (query !== "" ||
+        selectedStatus.length > 0 ||
+        selectedPriority.length > 0);
     setNoResultsFound(noResults);
-  }, [tasks, query]);
+  }, [tasks, query, selectedStatus, selectedPriority]);
 
   return (
     <>
@@ -86,7 +102,16 @@ export function MainLayout() {
           handleInputReset={handleInputReset}
           handleEditReset={handleEditReset}
         />
-        <TaskFilters query={query} setQuery={setQuery} />
+        <TaskFilters
+          tasks={filteredTasks}
+          setTasks={setTasks}
+          query={query}
+          setQuery={setQuery}
+          selectedStatus={selectedStatus}
+          setSelectedStatus={setSelectedStatus}
+          selectedPriority={selectedPriority}
+          setSelectedPriority={setSelectedPriority}
+        />
         <TaskList
           tasks={filteredTasks}
           setTasks={setTasks}

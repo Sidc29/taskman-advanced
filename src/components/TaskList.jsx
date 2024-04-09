@@ -204,7 +204,7 @@ const TaskList = ({
   }, [sortOrder]); // Trigger sort when sortOrder changes
 
   return (
-    <div className="w-[1000px] m-auto mt-16 border border-1 rounded-t-lg">
+    <div className="w-[1000px] m-auto border border-1 rounded-t-lg">
       <Toaster />
       <Table>
         <TableHeader>
