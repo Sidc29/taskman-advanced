@@ -16,39 +16,22 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const MultiSelect = ({
-  type,
-  data,
-  selectedStatus,
-  setSelectedStatus,
-  selectedPriority,
-  setSelectedPriority,
-}) => {
+const MultiSelect = ({ type, data, selectedFilter, setSelectedFilter }) => {
   const [open, setOpen] = useState(false);
 
-  const toggleStatus = (status) => {
-    if (selectedStatus.includes(status)) {
-      setSelectedStatus((prevStatus) =>
-        prevStatus.filter((item) => item !== status)
+  const toggleFilter = (filterOption) => {
+    if (selectedFilter.includes(filterOption)) {
+      setSelectedFilter((prevStatus) =>
+        prevStatus.filter((item) => item !== filterOption)
       );
     } else {
-      setSelectedStatus((prevStatus) => [...prevStatus, status]);
-    }
-  };
-
-  const togglePriority = (priority) => {
-    if (selectedPriority.includes(priority)) {
-      setSelectedPriority((prevPriority) =>
-        prevPriority.filter((item) => item !== priority)
-      );
-    } else {
-      setSelectedPriority((prevPriority) => [...prevPriority, priority]);
+      setSelectedFilter((prevStatus) => [...prevStatus, filterOption]);
     }
   };
 
   // Clear filters
   const clearFilters = () => {
-    setSelectedStatus([]); // Clear the selected status
+    setSelectedFilter([]);
   };
 
   return (
@@ -70,40 +53,24 @@ const MultiSelect = ({
                       className="flex items-center gap-2"
                       value={dataItem.value}
                       onSelect={(currentValue) => {
-                        if (type === "Status") {
-                          toggleStatus(currentValue);
-                        } else if (type === "Priority") {
-                          togglePriority(currentValue);
-                        }
+                        toggleFilter(currentValue);
                       }}
                     >
                       <Checkbox
-                        checked={
-                          type === "Status"
-                            ? selectedStatus?.includes(dataItem.value)
-                            : selectedPriority?.includes(dataItem.value)
-                        }
+                        checked={selectedFilter?.includes(dataItem.value)}
                         onChange={() => {
-                          if (type === "Status") {
-                            toggleStatus(dataItem.value);
-                          } else if (type === "Priority") {
-                            togglePriority(dataItem.value);
-                          }
+                          toggleFilter(dataItem.value);
                         }}
                       />
                       {dataItem.label}
                     </CommandItem>
                     {index === data?.length - 1 &&
-                      (type === "Status"
-                        ? selectedStatus?.length > 0
-                        : selectedPriority?.length > 0) && (
+                      selectedFilter?.length > 0 && (
                         <Separator className="my-1" />
                       )}
                   </div>
                 ))}
-                {(type === "Status"
-                  ? selectedStatus?.length > 0
-                  : selectedPriority?.length > 0) && (
+                {selectedFilter?.length > 0 && (
                   <CommandItem
                     className="justify-center"
                     onSelect={() => {
@@ -118,28 +85,14 @@ const MultiSelect = ({
           </Command>
         </PopoverContent>
       </Popover>
-      {(
-        type === "Status"
-          ? selectedStatus?.length > 2
-          : selectedPriority?.length > 2
-      ) ? (
+      {selectedFilter?.length > 2 ? (
         <Badge className="rounded-sm" variant="secondary">
-          {(type === "Status"
-            ? selectedStatus?.length
-            : selectedPriority?.length) +
-            " " +
-            "selected"}
+          {selectedFilter?.length + " " + "selected"}
         </Badge>
-      ) : type === "Status" ? (
-        selectedStatus?.map((status, index) => (
-          <Badge key={index} className="rounded-sm" variant="secondary">
-            {status}
-          </Badge>
-        ))
       ) : (
-        selectedPriority?.map((priority, index) => (
+        selectedFilter?.map((filterOption, index) => (
           <Badge key={index} className="rounded-sm" variant="secondary">
-            {priority}
+            {filterOption}
           </Badge>
         ))
       )}
