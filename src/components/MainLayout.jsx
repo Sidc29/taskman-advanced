@@ -90,7 +90,7 @@ export function MainLayout() {
 
   // Filtering tasks
   useEffect(() => {
-    const filtered = tasks.filter((item) => {
+    const filtered = tasks?.filter((item) => {
       // Filter by name and selected statuses
       const matchesQuery = item.name
         .toLowerCase()
@@ -108,7 +108,7 @@ export function MainLayout() {
 
     // Check if there are no results based on both query and selected statuses
     const noResults =
-      filtered.length === 0 &&
+      filtered?.length === 0 &&
       (query !== "" ||
         selectedStatus.length > 0 ||
         selectedPriority.length > 0 ||
