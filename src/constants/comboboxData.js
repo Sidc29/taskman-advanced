@@ -5,7 +5,7 @@ import {
   Clock,
   CheckCircle2,
   ListTodo,
-  HelpCircle,
+  PauseCircle,
   XCircle,
 } from "lucide-react";
 
@@ -17,9 +17,9 @@ export const statuses = [
     icon: Clock,
   },
   {
-    value: "Backlog",
-    label: "Backlog",
-    icon: HelpCircle,
+    value: "On Hold",
+    label: "On Hold",
+    icon: PauseCircle,
   },
   {
     value: "Todo",
@@ -64,12 +64,20 @@ export const labels = [
     label: "Work",
   },
   {
-    value: "Enhancement",
-    label: "Enhancement",
+    value: "Home",
+    label: "Home",
   },
   {
     value: "Personal",
     label: "Personal",
+  },
+  {
+    value: "Finance",
+    label: "Finance",
+  },
+  {
+    value: "Travel",
+    label: "Travel",
   },
   {
     value: "Urgent",
