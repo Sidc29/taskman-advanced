@@ -16,14 +16,22 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, Edit, Copy } from "lucide-react";
+import {
+  ArrowUpDown,
+  Edit,
+  Copy,
+  MoreVertical,
+  MoreHorizontal,
+  Trash,
+} from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import DeleteAlertDialog from "./DeleteAlertDialog";
 import CustomDropdownMenuSub from "./CustomDropdownMenuSub";
 import { labels, statuses, priorities } from "../constants/comboboxData";
+import { Checkbox } from "@/components/ui/checkbox";
+
 const TaskList = ({
   tasks,
   setTasks,
@@ -48,6 +56,8 @@ const TaskList = ({
   const [deletedTask, setDeletedTask] = useState(null);
   const [deletedTaskIndex, setDeletedTaskIndex] = useState(null);
   const [restoreTask, setRestoreTask] = useState(false);
+  const [selectedTask, setSelectedTask] = useState([]);
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
 
   const { toast } = useToast();
 
@@ -173,14 +183,68 @@ const TaskList = ({
     }
   }, [sortOrder]); // Trigger sort when sortOrder changes
 
+  const toggleTaskSelect = (taskItem) => {
+    setSelectedTask((prevStatus) =>
+      prevStatus.includes(taskItem)
+        ? prevStatus.filter((item) => item !== taskItem)
+        : [...prevStatus, taskItem]
+    );
+
+    // Check if all tasks are selected
+    const allTasksSelected = selectedTask.length + 1 === tasks.length;
+
+    // Update select all checkbox
+    setSelectAllChecked(allTasksSelected);
+  };
+
+  const toggleTaskSelectAll = () => {
+    const allTasksSelected = selectedTask.length === tasks.length;
+
+    if (allTasksSelected) {
+      setSelectedTask([]);
+      setSelectAllChecked(false);
+    } else {
+      setSelectedTask(tasks.map((task) => task));
+      setSelectAllChecked(true);
+    }
+  };
+
+  const handleBulkAction = () => {
+    if (selectedTask.length > 0) {
+      const filteredTasks = tasks.filter(
+        (task) => !selectedTask.includes(task)
+      );
+      setTasks(filteredTasks);
+      setSelectedTask([]);
+    }
+  };
+
+  console.log(selectAllChecked);
+
   return (
     <>
-      <div className="w-[1000px] m-0 border border-1 rounded-t-lg">
+      <div className="w-[1100px] m-0 border border-1 rounded-t-lg">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50">
-              <TableHead className="w-[100px]">Task ID</TableHead>
-
+              <TableHead
+                className="w-[100px] flex items-center"
+                onCheckedChange={() => {
+                  toggleTaskSelectAll();
+                }}
+              >
+                <Checkbox
+                  disabled={tasks.length === 0}
+                  checked={
+                    tasks.length === selectedTask.length && selectAllChecked
+                  }
+                  className="h-4 w-4 mr-2"
+                  onCheckedChange={() => {
+                    toggleTaskSelectAll();
+                  }}
+                />
+                Task ID
+              </TableHead>
               <TableHead
                 onClick={() => {
                   setSortBy("name");
@@ -206,7 +270,6 @@ const TaskList = ({
                   </Button>
                 </TableHead>
               )}
-
               {/* Priority */}
               {selectedView.includes("Priority") && (
                 <TableHead
@@ -224,14 +287,47 @@ const TaskList = ({
               {selectedView.includes("Label") && (
                 <TableHead className="w-[100px]">Label</TableHead>
               )}
-
               <TableHead>Action</TableHead>
+              <TableHead>
+                <Button
+                  disabled={selectedTask.length === 0}
+                  className="flex items-center"
+                  variant="ghost"
+                >
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <MoreVertical className="h-4 w-4" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem
+                        className="text-red-500"
+                        onClick={handleBulkAction}
+                      >
+                        <Trash className="mr-2 h-4 w-4" />
+                        Delete Selected
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </Button>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {tasks.map((taskItem, index) => (
               <TableRow key={index}>
-                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex items-center">
+                    <Checkbox
+                      className="h-4 w-4 mr-2"
+                      checked={selectedTask?.includes(taskItem)}
+                      onCheckedChange={() => {
+                        toggleTaskSelect(taskItem);
+                      }}
+                    />
+                    <span>{index + 1}</span>
+                  </div>
+                </TableCell>
 
                 <TableCell className="font-medium">
                   <span>{taskItem.name}</span>

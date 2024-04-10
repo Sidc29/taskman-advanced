@@ -65,7 +65,7 @@ const TaskFilters = ({
 
   return (
     <>
-      <div className="flex justify-between items-center space-x-2 mt-11 mb-3 w-[1000px]">
+      <div className="flex justify-between items-center space-x-2 mt-11 mb-3 w-[1100px]">
         <div className="flex gap-2">
           {/* Text filter */}
           <Input
@@ -133,7 +133,6 @@ const TaskFilters = ({
                         value={viewOption.value}
                         onSelect={(currentValue) => {
                           toggleView(currentValue);
-                          setOpen(false);
                         }}
                       >
                         <div className="flex gap-2">{viewOption.label}</div>
