@@ -230,8 +230,6 @@ const TaskList = ({
     }
   }, [selectedTask, tasks]);
 
-  console.log(selectAllChecked);
-
   return (
     <>
       <div className="w-[1100px] m-0 border border-1 rounded-t-lg">
