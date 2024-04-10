@@ -18,20 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowUpDown,
-  ArrowRight,
-  ArrowDown,
-  ArrowUp,
-  ArrowUpCircle,
-  HelpCircle,
-  Pen,
-  CheckCircle2,
-  XCircle,
-  Edit,
-  Copy,
-} from "lucide-react";
-import { Toaster } from "@/components/ui/toaster";
+import { ArrowUpDown, Edit, Copy } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import DeleteAlertDialog from "./DeleteAlertDialog";
@@ -121,73 +108,18 @@ const TaskList = ({
     });
   };
 
-  // To render status icons
-  const getStatusData = (task) => {
-    if (task.status === "In Progress") {
-      return (
-        <div className="flex row items-center">
-          <ArrowUpCircle className="opacity-40 mr-2 h-10 w-4" />
-          <span>{task.status ? task.status : "-"}</span>
-        </div>
-      );
-    } else if (task.status === "Backlog") {
-      return (
-        <div className="flex row items-center">
-          <HelpCircle className="opacity-40 mr-2 h-10 w-4" />
-          <span>{task.status ? task.status : "-"}</span>
-        </div>
-      );
-    } else if (task.status === "Todo") {
-      return (
-        <div className="flex row items-center">
-          <Pen className="opacity-40 mr-2 h-10 w-4" />
-          <span>{task.status ? task.status : "-"}</span>
-        </div>
-      );
-    } else if (task.status === "Done") {
-      return (
-        <div className="flex row items-center">
-          <CheckCircle2 className="opacity-40 mr-2 h-10 w-4" />
-          <span>{task.status ? task.status : "-"}</span>
-        </div>
-      );
-    } else if (task.status === "Canceled") {
-      return (
-        <div className="flex row items-center">
-          <XCircle className="opacity-40 mr-2 h-10 w-4" />
-          <span>{task.status ? task.status : "-"}</span>
-        </div>
-      );
-    } else {
-      return;
-    }
-  };
+  // To render Status and Priority cell data
+  const getData = (type, taskItem) => {
+    const ObjectType = type.find((item) => item.value === taskItem);
 
-  // To render priority icons
-  const getPriorityData = (task) => {
-    if (task.priority === "Low") {
+    if (ObjectType) {
+      const Icon = ObjectType.icon;
       return (
         <div className="flex row items-center">
-          <ArrowDown className="opacity-40 mr-2 h-10 w-4" />
-          <span> {task.priority ? task.priority : "-"}</span>
+          {<Icon className="opacity-40 mr-2 h-10 w-4" />}
+          <span> {taskItem ? taskItem : "-"}</span>
         </div>
       );
-    } else if (task.priority === "Medium") {
-      return (
-        <div className="flex row items-center">
-          <ArrowRight className="opacity-40 mr-2 h-10 w-4" />
-          <span> {task.priority ? task.priority : "-"}</span>
-        </div>
-      );
-    } else if (task.priority === "High") {
-      return (
-        <div className="flex row items-center">
-          <ArrowUp className="opacity-40 mr-2 h-10 w-4" />
-          <span> {task.priority ? task.priority : "-"}</span>
-        </div>
-      );
-    } else {
-      return;
     }
   };
 
@@ -242,7 +174,6 @@ const TaskList = ({
 
   return (
     <div className="w-[1000px] m-0 border border-1 rounded-t-lg">
-      <Toaster />
       <Table>
         <TableHeader>
           <TableRow>
@@ -294,16 +225,16 @@ const TaskList = ({
                 <span>{taskItem.name}</span>
               </TableCell>
               <TableCell className="font-medium ">
-                {taskItem.status ? getStatusData(taskItem) : "-"}
+                {getData(statuses, taskItem.status)}
               </TableCell>
               <TableCell className="font-medium">
-                {taskItem.priority ? getPriorityData(taskItem) : "-"}
+                {getData(priorities, taskItem.priority)}
               </TableCell>
               <TableCell className="font-medium">
                 {taskItem.label ? (
                   <Badge className="rounded-md">{taskItem.label}</Badge>
                 ) : (
-                  ""
+                  "-"
                 )}
               </TableCell>
               <TableCell>

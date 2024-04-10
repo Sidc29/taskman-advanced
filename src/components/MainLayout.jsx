@@ -66,6 +66,10 @@ export function MainLayout() {
         priority: inputPriority,
       },
     ]);
+    toast({
+      title: "Task Added",
+      description: "Task has been added successfully ",
+    });
     handleInputReset();
     handleFiltersReset();
   };
@@ -82,7 +86,7 @@ export function MainLayout() {
       handleInputReset();
       handleEditReset();
       toast({
-        title: "Changes Saved",
+        title: "Task Edited",
         description: "Task has been edited successfully",
       });
     }

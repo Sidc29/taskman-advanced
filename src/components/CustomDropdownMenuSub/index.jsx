@@ -22,6 +22,25 @@ const CustomDropdownMenuSub = ({
   setOpen,
   value,
 }) => {
+  // Check if the taskItem already has a status or priority
+  const hasStatus =
+    taskItem.status && (type === "Apply Status" || type === "Change Status");
+  const hasPriority =
+    taskItem.priority &&
+    (type === "Apply Priority" || type === "Change Priority");
+  const hasLabel =
+    taskItem.label && (type === "Apply Label" || type === "Change Label");
+
+  // Dynamically set the type based on whether the taskItem already has a status or priority
+  let dynamicType = type;
+  if (hasStatus) {
+    dynamicType = "Change Status";
+  } else if (hasPriority) {
+    dynamicType = "Change Priority";
+  } else if (hasLabel) {
+    dynamicType = "Change Label";
+  }
+
   return (
     <DropdownMenuSub>
       <DropdownMenuSubTrigger>
@@ -34,7 +53,7 @@ const CustomDropdownMenuSub = ({
         ) : (
           ""
         )}
-        {type}
+        {dynamicType}
       </DropdownMenuSubTrigger>
       <DropdownMenuSubContent className="p-0 w-[150px]">
         <Command>
