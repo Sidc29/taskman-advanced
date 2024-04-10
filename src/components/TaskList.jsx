@@ -198,15 +198,13 @@ const TaskList = ({
   };
 
   const toggleTaskSelectAll = () => {
-    const allTasksSelected = selectedTask.length === tasks.length;
-
-    if (allTasksSelected) {
+    if (selectAllChecked) {
       setSelectedTask([]);
-      setSelectAllChecked(false);
     } else {
-      setSelectedTask(tasks.map((task) => task));
-      setSelectAllChecked(true);
+      setSelectedTask(tasks.map((task) => task)); // Select all tasks
     }
+
+    setSelectAllChecked((prev) => !prev);
   };
 
   const handleBulkAction = () => {
@@ -219,6 +217,19 @@ const TaskList = ({
     }
   };
 
+  useEffect(() => {
+    if (tasks.length > 0) {
+      // Check if all tasks are selected
+      const allTasksSelected = selectedTask.length === tasks.length;
+
+      // Update select all checkbox
+      setSelectAllChecked(allTasksSelected);
+    } else {
+      // If there are no tasks, uncheck the "Select All" checkbox
+      setSelectAllChecked(false);
+    }
+  }, [selectedTask, tasks]);
+
   console.log(selectAllChecked);
 
   return (
@@ -227,12 +238,7 @@ const TaskList = ({
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50">
-              <TableHead
-                className="w-[100px] flex items-center"
-                onCheckedChange={() => {
-                  toggleTaskSelectAll();
-                }}
-              >
+              <TableHead className="w-[100px] flex items-center">
                 <Checkbox
                   disabled={tasks.length === 0}
                   checked={
@@ -289,14 +295,16 @@ const TaskList = ({
               )}
               <TableHead>Action</TableHead>
               <TableHead>
-                <Button
+                <div
                   disabled={selectedTask.length === 0}
                   className="flex items-center"
                   variant="ghost"
                 >
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <MoreVertical className="h-4 w-4" />
+                      <Button variant="ghost">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
@@ -309,7 +317,7 @@ const TaskList = ({
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </Button>
+                </div>
               </TableHead>
             </TableRow>
           </TableHeader>
