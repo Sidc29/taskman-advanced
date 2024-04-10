@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import CustomCombox from "./Combobox";
@@ -25,6 +25,23 @@ const TaskInputForm = ({
   const [inputStatusOpen, setInputStatusOpen] = useState(false);
   const [priorityOpen, setPriorityOpen] = useState(false);
   const [labelOpen, setLabelOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState({});
+  const [selectedPriority, setSelectedPriority] = useState({});
+  const [selectedLabel, setSelectedLabel] = useState({});
+
+  useEffect(() => {
+    if (editMode) {
+      setSelectedStatus(
+        statuses.find((status) => status.value === inputStatus) || {}
+      );
+      setSelectedPriority(
+        priorities.find((priority) => priority.value === inputPriority) || {}
+      );
+      setSelectedLabel(
+        labels.find((label) => label.value === inputLabel) || {}
+      );
+    }
+  }, [editMode, inputStatus, inputPriority, inputLabel]);
 
   return (
     <form className="flex flex-col" onSubmit={editMode ? saveTask : addTask}>
@@ -45,6 +62,8 @@ const TaskInputForm = ({
           data={statuses}
           placeholder="Select Status"
           icon={true}
+          selectedOptions={selectedStatus}
+          setSelectedOptions={setSelectedStatus}
         />
         <CustomCombox
           tasks={tasks}
@@ -55,6 +74,8 @@ const TaskInputForm = ({
           data={priorities}
           placeholder="Select Priority"
           icon={true}
+          selectedOptions={selectedPriority}
+          setSelectedOptions={setSelectedPriority}
         />
         <CustomCombox
           value={inputLabel}
@@ -63,6 +84,8 @@ const TaskInputForm = ({
           setOpen={setLabelOpen}
           data={labels}
           placeholder="Select Label"
+          selectedOptions={selectedLabel}
+          setSelectedOptions={setSelectedLabel}
         />
       </div>
       <div className="mt-5">

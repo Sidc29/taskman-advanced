@@ -27,8 +27,8 @@ export const statuses = [
     icon: ListTodo,
   },
   {
-    value: "Done",
-    label: "Done",
+    value: "Completed",
+    label: "Completed",
     icon: CheckCircle2,
   },
   {

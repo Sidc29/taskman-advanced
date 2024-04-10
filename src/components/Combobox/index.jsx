@@ -22,15 +22,11 @@ const CustomCombox = ({
   data,
   placeholder,
   icon,
+  selectedOptions,
+  setSelectedOptions,
 }) => {
-  const [selectedStatus, setSelectedStatus] = useState({});
-
-  useEffect(() => {
-    setSelectedStatus({});
-  }, [tasks]);
-
   const clearSelection = () => {
-    setSelectedStatus({});
+    setSelectedOptions({});
     setValue("");
     setOpen(false);
   };
@@ -52,7 +48,7 @@ const CustomCombox = ({
         </Button>
       </PopoverTrigger>
       <div>
-        {selectedStatus.value === value && (
+        {selectedOptions.value === value && (
           <XCircle
             className="h-4 w-4 cursor-pointer"
             onClick={clearSelection}
@@ -69,14 +65,15 @@ const CustomCombox = ({
                   value={dataItem.value}
                   onSelect={(currentValue) => {
                     const isSelected =
-                      selectedStatus && selectedStatus.value === dataItem.value;
+                      selectedOptions &&
+                      selectedOptions.value === dataItem.value;
                     // If the clicked option is already selected, do nothing
                     if (isSelected) {
                       setOpen(false);
                       return;
                     }
                     // Otherwise, update the selected status and value
-                    setSelectedStatus(dataItem);
+                    setSelectedOptions(dataItem);
                     setValue(currentValue);
                     setOpen(false);
                   }}
@@ -85,7 +82,7 @@ const CustomCombox = ({
                     <dataItem.icon
                       className={cn(
                         "mr-2 h-4 w-4",
-                        dataItem.value === selectedStatus?.value
+                        dataItem.value === selectedOptions?.value
                           ? "opacity-100"
                           : "opacity-40"
                       )}
