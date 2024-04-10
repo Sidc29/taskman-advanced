@@ -76,3 +76,19 @@ export const labels = [
     label: "Urgent",
   },
 ];
+
+// View options
+export const viewOpts = [
+  {
+    value: "Status",
+    label: "Status",
+  },
+  {
+    value: "Priority",
+    label: "Priority",
+  },
+  {
+    value: "Label",
+    label: "Label",
+  },
+];

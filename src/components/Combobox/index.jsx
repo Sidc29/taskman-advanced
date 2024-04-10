@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronDown, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
 const CustomCombox = ({
   tasks,
   value,

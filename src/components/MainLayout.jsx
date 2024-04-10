@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
+import { viewOpts } from "../constants/comboboxData";
 import TaskInputForm from "./TaskInputForm";
 import TaskList from "./TaskList";
 import TaskFilters from "./TaskFilters";
 import Navbar from "./Navbar";
+
 export function MainLayout() {
   const [inputValue, setInputValue] = useState("");
   const [inputStatus, setInputStatus] = useState("");
@@ -21,6 +23,9 @@ export function MainLayout() {
   const [selectedStatus, setSelectedStatus] = useState([]);
   const [selectedPriority, setSelectedPriority] = useState([]);
   const [selectedLabel, setSelectedLabel] = useState([]);
+  const [selectedView, setSelectedView] = useState(
+    viewOpts.map((opt) => opt.value)
+  );
 
   const { toast } = useToast();
 
@@ -154,6 +159,8 @@ export function MainLayout() {
           selectedLabel={selectedLabel}
           setSelectedLabel={setSelectedLabel}
           noResultsFound={noResultsFound}
+          selectedView={selectedView}
+          setSelectedView={setSelectedView}
         />
         <TaskList
           tasks={filteredTasks}
@@ -165,6 +172,8 @@ export function MainLayout() {
           setEditMode={setEditMode}
           setEditIndex={setEditIndex}
           noResultsFound={noResultsFound}
+          selectedView={selectedView}
+          setSelectedView={setSelectedView}
         />
       </div>
     </>
