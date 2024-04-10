@@ -94,8 +94,8 @@ const TaskList = ({
     setEditMode(true);
     setInputValue(tasks[editTaskIndex].name);
     setInputStatus(tasks[editTaskIndex].status);
-    setInputPriority(tasks[actuaeditTaskIndexlIndex].priority);
-    setInputLabel(tasks[actualIeditTaskIndexndex].label);
+    setInputPriority(tasks[editTaskIndex].priority);
+    setInputLabel(tasks[editTaskIndex].label);
   };
 
   // Function to copy a task
