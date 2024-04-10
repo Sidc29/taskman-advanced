@@ -24,6 +24,7 @@ import { ToastAction } from "@/components/ui/toast";
 import DeleteAlertDialog from "./DeleteAlertDialog";
 import CustomDropdownMenuSub from "./CustomDropdownMenuSub";
 import { labels, statuses, priorities } from "../constants/comboboxData";
+import TasksPagination from "./Pagination";
 const TaskList = ({
   tasks,
   setTasks,
@@ -47,15 +48,23 @@ const TaskList = ({
   const [deletedTask, setDeletedTask] = useState(null);
   const [deletedTaskIndex, setDeletedTaskIndex] = useState(null);
   const [restoreTask, setRestoreTask] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [tasksPerPage, setTasksPerPage] = useState(10);
+
+  const indexOfLastTask = currentPage * tasksPerPage;
+  const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+  const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const { toast } = useToast();
 
   // Deleting a task
-  const deleteTask = (toDeleteIndex) => {
+  const deleteTask = (taskIndexOnPage) => {
+    const actualIndex = (currentPage - 1) * tasksPerPage + taskIndexOnPage;
     const tasksCopy = [...tasks];
-    tasksCopy.splice(toDeleteIndex, 1);
-    setDeletedTask(tasks[toDeleteIndex]);
-    setDeletedTaskIndex(toDeleteIndex);
+    tasksCopy.splice(actualIndex, 1);
+    setDeletedTask(tasks[actualIndex]);
+    setDeletedTaskIndex(actualIndex);
     setTasks(tasksCopy);
     toast({
       title: "Task Deleted",
@@ -88,18 +97,20 @@ const TaskList = ({
   }, [restoreTask]);
 
   // Editing a Task
-  const editTask = (taskIndex) => {
-    setEditIndex(taskIndex);
+  const editTask = (taskIndexOnPage) => {
+    const actualIndex = (currentPage - 1) * tasksPerPage + taskIndexOnPage;
+    setEditIndex(actualIndex);
     setEditMode(true);
-    setInputValue(tasks[taskIndex].name);
-    setInputStatus(tasks[taskIndex].status);
-    setInputPriority(tasks[taskIndex].priority);
-    setInputLabel(tasks[taskIndex].label);
+    setInputValue(tasks[actualIndex].name);
+    setInputStatus(tasks[actualIndex].status);
+    setInputPriority(tasks[actualIndex].priority);
+    setInputLabel(tasks[actualIndex].label);
   };
 
   // Function to copy a task
-  const copyTask = (index) => {
-    const taskToCopy = tasks[index];
+  const copyTask = (taskIndexOnPage) => {
+    const actualIndex = (currentPage - 1) * tasksPerPage + taskIndexOnPage;
+    const taskToCopy = tasks[actualIndex];
     const newTask = { ...taskToCopy };
     setTasks([...tasks, newTask]);
     toast({
@@ -123,24 +134,27 @@ const TaskList = ({
     }
   };
 
-  // Applying label on a particular task
-  const handleApplyLabel = (index, labelToApply) => {
-    const tasksCopy = [...tasks];
-    tasksCopy[index].label = labelToApply;
-    setTasks(tasksCopy);
-  };
-
   // Applying status on a particular task
-  const handleApplyStatus = (index, statusToApply) => {
+  const handleApplyStatus = (taskIndexOnPage, statusToApply) => {
+    const actualIndex = (currentPage - 1) * tasksPerPage + taskIndexOnPage;
     const tasksCopy = [...tasks];
-    tasksCopy[index].status = statusToApply;
+    tasksCopy[actualIndex].status = statusToApply;
     setTasks(tasksCopy);
   };
 
   // Applying priority on a particular task
-  const handleApplyPriority = (index, priorityToApply) => {
+  const handleApplyPriority = (taskIndexOnPage, priorityToApply) => {
+    const actualIndex = (currentPage - 1) * tasksPerPage + taskIndexOnPage;
     const tasksCopy = [...tasks];
-    tasksCopy[index].priority = priorityToApply;
+    tasksCopy[actualIndex].priority = priorityToApply;
+    setTasks(tasksCopy);
+  };
+
+  // Applying label on a particular task
+  const handleApplyLabel = (taskIndexOnPage, labelToApply) => {
+    const actualIndex = (currentPage - 1) * tasksPerPage + taskIndexOnPage;
+    const tasksCopy = [...tasks];
+    tasksCopy[actualIndex].label = labelToApply;
     setTasks(tasksCopy);
   };
 
@@ -173,173 +187,184 @@ const TaskList = ({
   }, [sortOrder]); // Trigger sort when sortOrder changes
 
   return (
-    <div className="w-[1000px] m-0 border border-1 rounded-t-lg">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Task ID</TableHead>
+    <>
+      <div className="w-[1000px] m-0 border border-1 rounded-t-lg">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted/50">
+              <TableHead className="w-[100px]">Task ID</TableHead>
 
-            <TableHead
-              onClick={() => {
-                setSortBy("name");
-                toggleSortOrder();
-              }}
-            >
-              <Button className="flex items-center" variant="ghost">
-                Task
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-              </Button>
-            </TableHead>
-            <TableHead
-              onClick={() => {
-                setSortBy("status");
-                toggleSortOrder();
-              }}
-            >
-              <Button className="flex items-center" variant="ghost">
-                Status
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-              </Button>
-            </TableHead>
-            <TableHead
-              onClick={() => {
-                setSortBy("priority");
-                toggleSortOrder();
-              }}
-            >
-              <Button className="flex items-center" variant="ghost">
-                Priority
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-              </Button>
-            </TableHead>
-            <TableHead className="w-[100px]">Label</TableHead>
-            <TableHead>Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {tasks.map((taskItem, index) => (
-            <TableRow key={index}>
-              <TableCell className="font-medium">{index + 1}</TableCell>
-
-              <TableCell className="font-medium">
-                <span>{taskItem.name}</span>
-              </TableCell>
-              <TableCell className="font-medium ">
-                {getData(statuses, taskItem.status)}
-              </TableCell>
-              <TableCell className="font-medium">
-                {getData(priorities, taskItem.priority)}
-              </TableCell>
-              <TableCell className="font-medium">
-                {taskItem.label ? (
-                  <Badge className="rounded-md">{taskItem.label}</Badge>
-                ) : (
-                  "-"
-                )}
-              </TableCell>
-              <TableCell>
-                <DropdownMenu
-                  open={
-                    selectedIndex === index &&
-                    labelOpen &&
-                    statusOpen &&
-                    priorityOpen
-                  }
-                  onOpenChange={(newState) => {
-                    setLabelOpen(newState);
-                    setStatusOpen(newState);
-                    setPriorityOpen(newState);
-                    setSelectedIndex(index);
-                  }}
-                >
-                  <DropdownMenuTrigger asChild>
-                    <Button aria-haspopup="true" size="icon" variant="ghost">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => editTask(index)}>
-                      <Edit className="mr-2 h-4 w-4" />
-                      Edit
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    {/* Apply Status */}
-                    <CustomDropdownMenuSub
-                      type="Apply Status"
-                      taskItem={taskItem}
-                      triggerFunction={handleApplyStatus}
-                      setOpen={setStatusOpen}
-                      index={index}
-                      data={statuses}
-                      value={inputStatus}
-                    />
-                    {/* Apply Priority */}
-                    <CustomDropdownMenuSub
-                      type="Apply Priority"
-                      taskItem={taskItem}
-                      triggerFunction={handleApplyPriority}
-                      setOpen={setPriorityOpen}
-                      index={index}
-                      data={priorities}
-                      value={inputPriority}
-                    />
-                    {/* Apply Label */}
-                    <CustomDropdownMenuSub
-                      type="Apply Label"
-                      placeholder="Search labels..."
-                      taskItem={taskItem}
-                      triggerFunction={handleApplyLabel}
-                      setOpen={setLabelOpen}
-                      index={index}
-                      data={labels}
-                      value={inputLabel}
-                    />
-                    <DropdownMenuSeparator />
-                    {/* Copy a task*/}
-                    <DropdownMenuItem onClick={() => copyTask(index)}>
-                      <Copy className="mr-2 h-4 w-4" />
-                      Make a Copy
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DeleteAlertDialog
-                      index={index}
-                      triggerFunction={deleteTask}
-                      desc={`This action cannot be undone. This will permanently delete your
-                     task.`}
-                      btnText="Yes"
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
+              <TableHead
+                onClick={() => {
+                  setSortBy("name");
+                  toggleSortOrder();
+                }}
+              >
+                <Button className="flex items-center" variant="ghost">
+                  Task
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead
+                onClick={() => {
+                  setSortBy("status");
+                  toggleSortOrder();
+                }}
+              >
+                <Button className="flex items-center" variant="ghost">
+                  Status
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead
+                onClick={() => {
+                  setSortBy("priority");
+                  toggleSortOrder();
+                }}
+              >
+                <Button className="flex items-center" variant="ghost">
+                  Priority
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead className="w-[100px]">Label</TableHead>
+              <TableHead>Action</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {!noResultsFound && tasks.length === 0 ? (
-        <div className="flex items-center justify-center my-12">
-          <div className="flex flex-col items-center gap-1 text-center">
-            <h3 className="text-2xl font-bold tracking-tight">
-              You have no tasks right now
-            </h3>
-            <p className="text-sm text-muted-foreground w-3/4">
-              Feel free to begin adding tasks, including details such as their
-              status, priority, and labels.
-            </p>
-          </div>
-        </div>
-      ) : (
-        noResultsFound && (
+          </TableHeader>
+          <TableBody>
+            {currentTasks.map((taskItem, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-medium">
+                  {indexOfFirstTask + index + 1}
+                </TableCell>
+                <TableCell className="font-medium">
+                  <span>{taskItem.name}</span>
+                </TableCell>
+                <TableCell className="font-medium ">
+                  {getData(statuses, taskItem.status)}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {getData(priorities, taskItem.priority)}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {taskItem.label ? (
+                    <Badge className="rounded-md">{taskItem.label}</Badge>
+                  ) : (
+                    "-"
+                  )}
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu
+                    open={
+                      selectedIndex === index &&
+                      labelOpen &&
+                      statusOpen &&
+                      priorityOpen
+                    }
+                    onOpenChange={(newState) => {
+                      setLabelOpen(newState);
+                      setStatusOpen(newState);
+                      setPriorityOpen(newState);
+                      setSelectedIndex(index);
+                    }}
+                  >
+                    <DropdownMenuTrigger asChild>
+                      <Button aria-haspopup="true" size="icon" variant="ghost">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem onClick={() => editTask(index)}>
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      {/* Apply Status */}
+                      <CustomDropdownMenuSub
+                        type="Apply Status"
+                        taskItem={taskItem}
+                        triggerFunction={handleApplyStatus}
+                        setOpen={setStatusOpen}
+                        index={index}
+                        data={statuses}
+                        value={inputStatus}
+                      />
+                      {/* Apply Priority */}
+                      <CustomDropdownMenuSub
+                        type="Apply Priority"
+                        taskItem={taskItem}
+                        triggerFunction={handleApplyPriority}
+                        setOpen={setPriorityOpen}
+                        index={index}
+                        data={priorities}
+                        value={inputPriority}
+                      />
+                      {/* Apply Label */}
+                      <CustomDropdownMenuSub
+                        type="Apply Label"
+                        placeholder="Search labels..."
+                        taskItem={taskItem}
+                        triggerFunction={handleApplyLabel}
+                        setOpen={setLabelOpen}
+                        index={index}
+                        data={labels}
+                        value={inputLabel}
+                      />
+                      <DropdownMenuSeparator />
+                      {/* Copy a task*/}
+                      <DropdownMenuItem onClick={() => copyTask(index)}>
+                        <Copy className="mr-2 h-4 w-4" />
+                        Make a Copy
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DeleteAlertDialog
+                        index={index}
+                        triggerFunction={deleteTask}
+                        desc={`This action cannot be undone. This will permanently delete your
+                     task.`}
+                        btnText="Yes"
+                      />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+
+        {!noResultsFound && currentTasks.length === 0 ? (
           <div className="flex items-center justify-center my-12">
             <div className="flex flex-col items-center gap-1 text-center">
-              <h3 className="text-xl font-bold tracking-tight">
-                No tasks found
+              <h3 className="text-2xl font-bold tracking-tight">
+                You have no tasks right now
               </h3>
+              <p className="text-sm text-muted-foreground w-3/4">
+                Feel free to begin adding tasks, including details such as their
+                status, priority, and labels.
+              </p>
             </div>
           </div>
-        )
-      )}
-    </div>
+        ) : (
+          noResultsFound && (
+            <div className="flex items-center justify-center my-12">
+              <div className="flex flex-col items-center gap-1 text-center">
+                <h3 className="text-xl font-bold tracking-tight">
+                  No tasks found
+                </h3>
+              </div>
+            </div>
+          )
+        )}
+      </div>
+      <TasksPagination
+        tasksPerPage={tasksPerPage}
+        setTasksPerPage={setTasksPerPage}
+        totalTasks={tasks.length}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
+    </>
   );
 };
 
