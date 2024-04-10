@@ -118,7 +118,7 @@ const TaskList = ({
       return (
         <div className="flex row items-center">
           {<Icon className="opacity-40 mr-2 h-10 w-4" />}
-          <span> {taskItem ? taskItem : "-"}</span>
+          <span> {taskItem && taskItem}</span>
         </div>
       );
     }
@@ -238,13 +238,17 @@ const TaskList = ({
                 </TableCell>
                 {selectedView.includes("Status") && (
                   <TableCell className="font-medium ">
-                    {getData(statuses, taskItem.status)}
+                    {getData(statuses, taskItem.status)
+                      ? getData(statuses, taskItem.status)
+                      : "-"}
                   </TableCell>
                 )}
 
                 {selectedView.includes("Priority") && (
                   <TableCell className="font-medium ">
-                    {getData(priorities, taskItem.priority)}
+                    {getData(priorities, taskItem.priority)
+                      ? getData(priorities, taskItem.priority)
+                      : "-"}
                   </TableCell>
                 )}
 
