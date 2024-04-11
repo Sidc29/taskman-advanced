@@ -37,7 +37,7 @@ const CustomCombox = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[350px] justify-between"
+          className="w-[400px] justify-between"
         >
           {value
             ? data.find((dataItem) => dataItem.value === value)?.label

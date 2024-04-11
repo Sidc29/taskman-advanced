@@ -3,7 +3,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import CustomCombox from "./Combobox";
 
-import { statuses, priorities, labels } from "../constants/comboboxData";
+import {
+  statuses,
+  priorities,
+  labels,
+  reminderOptions,
+} from "../constants/comboboxData";
 
 const TaskInputForm = ({
   tasks,
@@ -16,6 +21,8 @@ const TaskInputForm = ({
   setInputPriority,
   inputLabel,
   setInputLabel,
+  inputReminder,
+  setInputReminder,
   editMode,
   setEditMode,
   saveTask,
@@ -25,9 +32,11 @@ const TaskInputForm = ({
   const [inputStatusOpen, setInputStatusOpen] = useState(false);
   const [priorityOpen, setPriorityOpen] = useState(false);
   const [labelOpen, setLabelOpen] = useState(false);
+  const [reminderOpen, setReminderOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState({});
   const [selectedPriority, setSelectedPriority] = useState({});
   const [selectedLabel, setSelectedLabel] = useState({});
+  const [selectedReminder, setSelectedReminder] = useState({});
 
   useEffect(() => {
     if (editMode) {
@@ -40,8 +49,12 @@ const TaskInputForm = ({
       setSelectedLabel(
         labels.find((label) => label.value === inputLabel) || {}
       );
+      setSelectedReminder(
+        reminderOptions.find((reminder) => reminder.value === inputReminder) ||
+          {}
+      );
     }
-  }, [editMode, inputStatus, inputPriority, inputLabel]);
+  }, [editMode, inputStatus, inputPriority, inputLabel, inputReminder]);
 
   return (
     <form className="flex flex-col" onSubmit={editMode ? saveTask : addTask}>
@@ -86,6 +99,16 @@ const TaskInputForm = ({
           placeholder="Select Label"
           selectedOptions={selectedLabel}
           setSelectedOptions={setSelectedLabel}
+        />
+        <CustomCombox
+          value={inputReminder}
+          setValue={setInputReminder}
+          open={reminderOpen}
+          setOpen={setReminderOpen}
+          data={reminderOptions}
+          placeholder="Select Reminder"
+          selectedOptions={selectedReminder}
+          setSelectedOptions={setSelectedReminder}
         />
       </div>
       <div className="mt-5">

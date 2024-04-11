@@ -100,3 +100,47 @@ export const viewOpts = [
     label: "Label",
   },
 ];
+
+// // Reminder options
+export const reminderOptions = [
+  {
+    value: "5 seconds",
+    label: "5 seconds",
+  },
+  {
+    value: "5 minutes",
+    label: "5 minutes",
+  },
+  {
+    value: "10 minutes",
+    label: "10 minutes",
+  },
+  {
+    value: "15 minutes",
+    label: "15 minutes",
+  },
+  {
+    value: "30 minutes",
+    label: "30 minutes",
+  },
+  {
+    value: "1 hours",
+    label: "1 hours",
+  },
+  {
+    value: "3 hours",
+    label: "3 hours",
+  },
+  {
+    value: "6 hours",
+    label: "6 hours",
+  },
+  {
+    value: "12 hours",
+    label: "12 hours",
+  },
+  {
+    value: "1 days",
+    label: "1 days",
+  },
+];
