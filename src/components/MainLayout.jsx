@@ -12,7 +12,6 @@ export function MainLayout() {
   const [inputStatus, setInputStatus] = useState("");
   const [inputPriority, setInputPriority] = useState("");
   const [inputLabel, setInputLabel] = useState("");
-  const [inputReminder, setInputReminder] = useState("");
   const [tasks, setTasks] = useState(
     JSON.parse(localStorage.getItem("tasks")) || []
   );
@@ -52,7 +51,6 @@ export function MainLayout() {
     setInputValue("");
     setInputStatus("");
     setInputPriority("");
-    setInputReminder("");
     setInputLabel("");
   };
 
@@ -76,7 +74,6 @@ export function MainLayout() {
         label: inputLabel,
         status: inputStatus,
         priority: inputPriority,
-        reminder: inputReminder,
       },
     ]);
     toast({
@@ -95,7 +92,6 @@ export function MainLayout() {
       tasksCopy[editIndex].status = inputStatus;
       tasksCopy[editIndex].priority = inputPriority;
       tasksCopy[editIndex].label = inputLabel;
-      tasksCopy[editIndex].reminder = inputReminder;
       setTasks(tasksCopy);
       handleInputReset();
       handleEditReset();
@@ -150,8 +146,6 @@ export function MainLayout() {
           setInputPriority={setInputPriority}
           inputLabel={inputLabel}
           setInputLabel={setInputLabel}
-          inputReminder={inputReminder}
-          setInputReminder={setInputReminder}
           editMode={editMode}
           setEditMode={setEditMode}
           saveTask={saveTask}
@@ -180,8 +174,6 @@ export function MainLayout() {
           setInputStatus={setInputStatus}
           setInputPriority={setInputPriority}
           setInputLabel={setInputLabel}
-          inputReminder={inputReminder}
-          setInputReminder={setInputReminder}
           setEditMode={setEditMode}
           setEditIndex={setEditIndex}
           noResultsFound={noResultsFound}

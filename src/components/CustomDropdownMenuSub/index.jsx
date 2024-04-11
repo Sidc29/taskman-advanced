@@ -7,13 +7,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Tags,
-  Check,
-  ShieldQuestion,
-  CheckCircle,
-  AlarmClock,
-} from "lucide-react";
+import { Tags, Check, ShieldQuestion, CheckCircle } from "lucide-react";
 import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
@@ -36,9 +30,6 @@ const CustomDropdownMenuSub = ({
     (type === "Apply Priority" || type === "Change Priority");
   const hasLabel =
     taskItem.label && (type === "Apply Label" || type === "Change Label");
-  const hasReminder =
-    taskItem.reminder &&
-    (type === "Set Reminder" || type === "Change Reminder");
 
   // Dynamically set the type based on whether the taskItem already has a status or priority
   let dynamicType = type;
@@ -48,8 +39,6 @@ const CustomDropdownMenuSub = ({
     dynamicType = "Change Priority";
   } else if (hasLabel) {
     dynamicType = "Change Label";
-  } else if (hasReminder) {
-    dynamicType = "Change Reminder";
   }
 
   return (
@@ -61,8 +50,6 @@ const CustomDropdownMenuSub = ({
           <ShieldQuestion className="mr-2 h-4 w-4" />
         ) : type === "Apply Priority" ? (
           <CheckCircle className="mr-2 h-4 w-4" />
-        ) : type === "Set Reminder" ? (
-          <AlarmClock className="mr-2 h-4 w-4" />
         ) : (
           ""
         )}
@@ -99,8 +86,7 @@ const CustomDropdownMenuSub = ({
                       "h-4 w-4",
                       taskItem.label === dataItem.label ||
                         taskItem.status === dataItem.label ||
-                        taskItem.priority === dataItem.label ||
-                        taskItem.reminder === dataItem.label
+                        taskItem.priority === dataItem.label
                         ? "opacity-100"
                         : "opacity-0"
                     )}

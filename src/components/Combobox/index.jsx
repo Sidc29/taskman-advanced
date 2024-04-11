@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 const CustomCombox = ({
-  tasks,
   value,
   setValue,
   open,
