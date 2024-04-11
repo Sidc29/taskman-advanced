@@ -31,6 +31,7 @@ import DeleteAlertDialog from "./DeleteAlertDialog";
 import CustomDropdownMenuSub from "./CustomDropdownMenuSub";
 import { labels, statuses, priorities } from "../constants/comboboxData";
 import { Checkbox } from "@/components/ui/checkbox";
+import DropdownMenuSubBulk from "./DropdownMenuSubBulk";
 
 const TaskList = ({
   tasks,
@@ -285,6 +286,42 @@ const TaskList = ({
     }
   }, [selectedTasks, tasks]);
 
+  // Function to handle applying or changing the status for selected tasks
+  const handleApplyStatusBulk = (statusToApply) => {
+    selectedTasks.forEach((task) => {
+      const taskIndex = tasks.indexOf(task);
+      handleApplyStatus(taskIndex, statusToApply);
+    });
+    toast({
+      title: "Status Applied to Selected Tasks",
+      description: "The status has been applied to all selected tasks.",
+    });
+  };
+
+  // Function to handle applying or changing the priority for selected tasks
+  const handleApplyPriorityBulk = (priorityToApply) => {
+    selectedTasks.forEach((task) => {
+      const taskIndex = tasks.indexOf(task);
+      handleApplyPriority(taskIndex, priorityToApply);
+    });
+    toast({
+      title: "Priority Applied to Selected Tasks",
+      description: "The priority has been applied to all selected tasks.",
+    });
+  };
+
+  // Function to handle applying or changing the priority for selected tasks
+  const handleApplyLabelBulk = (labelToApply) => {
+    selectedTasks.forEach((task) => {
+      const taskIndex = tasks.indexOf(task);
+      handleApplyLabel(taskIndex, labelToApply);
+    });
+    toast({
+      title: "Priority Applied to Selected Tasks",
+      description: "The priority has been applied to all selected tasks.",
+    });
+  };
+
   return (
     <>
       <div className="w-[1100px] m-0 border border-1 rounded-t-lg">
@@ -363,10 +400,37 @@ const TaskList = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Bulk Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {/* Apply Status (Bulk) */}
+                      <DropdownMenuSubBulk
+                        type="Apply Status"
+                        data={statuses}
+                        triggerFunction={handleApplyStatusBulk}
+                        setOpen={setBulkSelectOpen}
+                        open={bulkSelectOpen}
+                      />
+                      {/* Apply Priority (Bulk) */}
+                      <DropdownMenuSubBulk
+                        type="Apply Priority"
+                        data={priorities}
+                        triggerFunction={handleApplyPriorityBulk}
+                        setOpen={setBulkSelectOpen}
+                        open={bulkSelectOpen}
+                      />
+                      {/* Apply Labels (Bulk) */}
+                      <DropdownMenuSubBulk
+                        type="Apply Label"
+                        data={labels}
+                        triggerFunction={handleApplyLabelBulk}
+                        setOpen={setBulkSelectOpen}
+                        open={bulkSelectOpen}
+                      />
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={handleBulkCopyAction}>
                         <Copy className="h-4 w-4" />
                         <span className="ml-2">Make Copies</span>
                       </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DeleteAlertDialog
                         triggerFunction={handleBulkDeleteAction}
                         desc={`This action cannot be undone. This will permanently delete all your
@@ -447,6 +511,7 @@ const TaskList = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={() => editTask(index)}>
                         <Edit className="mr-2 h-4 w-4" />
                         Edit

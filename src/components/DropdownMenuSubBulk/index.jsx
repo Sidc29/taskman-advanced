@@ -7,40 +7,19 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Tags, Check, Hourglass, CheckCircle } from "lucide-react";
+import { Tags, Hourglass, CheckCircle } from "lucide-react";
 import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
-const CustomDropdownMenuSub = ({
+const DropdownMenuSubBulk = ({
   data,
-  index,
   type,
-  taskItem,
   triggerFunction,
   setOpen,
   value,
 }) => {
-  // Check if the taskItem already has a status or priority
-  const hasStatus =
-    taskItem.status && (type === "Apply Status" || type === "Change Status");
-  const hasPriority =
-    taskItem.priority &&
-    (type === "Apply Priority" || type === "Change Priority");
-  const hasLabel =
-    taskItem.label && (type === "Apply Label" || type === "Change Label");
-
-  // Dynamically set the type based on whether the taskItem already has a status or priority
-  let dynamicType = type;
-  if (hasStatus) {
-    dynamicType = "Change Status";
-  } else if (hasPriority) {
-    dynamicType = "Change Priority";
-  } else if (hasLabel) {
-    dynamicType = "Change Label";
-  }
-
   return (
     <DropdownMenuSub>
       <DropdownMenuSubTrigger>
@@ -53,7 +32,7 @@ const CustomDropdownMenuSub = ({
         ) : (
           ""
         )}
-        {dynamicType}
+        {type}
       </DropdownMenuSubTrigger>
       <DropdownMenuSubContent className="p-0 w-[150px]">
         <Command>
@@ -69,7 +48,7 @@ const CustomDropdownMenuSub = ({
                   key={dataItemIndex}
                   value={value}
                   onSelect={(value) => {
-                    triggerFunction(index, value);
+                    triggerFunction(value);
                     setOpen(false);
                   }}
                 >
@@ -81,16 +60,6 @@ const CustomDropdownMenuSub = ({
                     )}
                     <span>{dataItem.label}</span>
                   </div>
-                  <Check
-                    className={cn(
-                      "h-4 w-4",
-                      taskItem.label === dataItem.label ||
-                        taskItem.status === dataItem.label ||
-                        taskItem.priority === dataItem.label
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
-                  />
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -101,4 +70,4 @@ const CustomDropdownMenuSub = ({
   );
 };
 
-export default CustomDropdownMenuSub;
+export default DropdownMenuSubBulk;
