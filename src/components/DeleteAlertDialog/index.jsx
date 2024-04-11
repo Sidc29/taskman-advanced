@@ -12,7 +12,13 @@ import {
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const DeleteAlertDialog = ({ index, triggerFunction, desc, btnText }) => {
+const DeleteAlertDialog = ({
+  index,
+  triggerFunction,
+  desc,
+  btnText,
+  btnYesText,
+}) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -21,7 +27,7 @@ const DeleteAlertDialog = ({ index, triggerFunction, desc, btnText }) => {
           className="text-red-500 w-full justify-start gap-2 focus:text-red-500 h-8 cursor-default p-2.5"
         >
           <Trash className="h-4 w-4" />
-          Delete Task
+          {btnText}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -33,9 +39,9 @@ const DeleteAlertDialog = ({ index, triggerFunction, desc, btnText }) => {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             className="bg-red-500 hover:bg-red-600 text-white"
-            onClick={() => triggerFunction(index)}
+            onClick={() => triggerFunction(index && index)}
           >
-            {btnText}
+            {btnYesText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

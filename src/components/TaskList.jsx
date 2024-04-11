@@ -54,10 +54,17 @@ const TaskList = ({
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [deletedTask, setDeletedTask] = useState(null);
+  const [deletedSelectedTask, setDeletedSelectedTask] = useState(null);
   const [deletedTaskIndex, setDeletedTaskIndex] = useState(null);
   const [restoreTask, setRestoreTask] = useState(false);
-  const [selectedTask, setSelectedTask] = useState([]);
+  const [selectedTasks, setSelectedTasks] = useState([]);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
+  const [bulkSelectOpen, setBulkSelectOpen] = useState(false);
+  const [restoreDeletedSelectedTasks, setRestoreDeletedSelectedTasks] =
+    useState(false);
+  const [deletedSelectedTaskIndices, setDeletedSelectedTaskIndices] = useState(
+    []
+  );
 
   const { toast } = useToast();
 
@@ -184,14 +191,14 @@ const TaskList = ({
   }, [sortOrder]); // Trigger sort when sortOrder changes
 
   const toggleTaskSelect = (taskItem) => {
-    setSelectedTask((prevStatus) =>
+    setSelectedTasks((prevStatus) =>
       prevStatus.includes(taskItem)
         ? prevStatus.filter((item) => item !== taskItem)
         : [...prevStatus, taskItem]
     );
 
     // Check if all tasks are selected
-    const allTasksSelected = selectedTask.length + 1 === tasks.length;
+    const allTasksSelected = selectedTasks.length + 1 === tasks.length;
 
     // Update select all checkbox
     setSelectAllChecked(allTasksSelected);
@@ -199,28 +206,76 @@ const TaskList = ({
 
   const toggleTaskSelectAll = () => {
     if (selectAllChecked) {
-      setSelectedTask([]);
+      setSelectedTasks([]);
     } else {
-      setSelectedTask(tasks.map((task) => task)); // Select all tasks
+      setSelectedTasks(tasks.map((task) => task)); // Select all tasks
     }
 
     setSelectAllChecked((prev) => !prev);
   };
 
-  const handleBulkAction = () => {
-    if (selectedTask.length > 0) {
+  const handleBulkDeleteAction = () => {
+    if (selectedTasks.length > 0) {
       const filteredTasks = tasks.filter(
-        (task) => !selectedTask.includes(task)
+        (task) => !selectedTasks.includes(task)
+      );
+      // Store deleted tasks and their indices
+      setDeletedSelectedTask(selectedTasks);
+      setDeletedSelectedTaskIndices(
+        selectedTasks.map((task) => tasks.indexOf(task))
       );
       setTasks(filteredTasks);
-      setSelectedTask([]);
+      setSelectedTasks([]);
+      toast({
+        title: "Selected Tasks Deleted",
+        description: "All selected tasks have been deleted successfully ",
+        action: (
+          <ToastAction
+            onClick={() => setRestoreDeletedSelectedTasks(true)}
+            altText="Undo"
+          >
+            Undo
+          </ToastAction>
+        ),
+      });
+    }
+    setBulkSelectOpen(false);
+  };
+
+  const undoDeleteSelectTasks = () => {
+    const updatedTasks = [...tasks];
+    deletedSelectedTask?.forEach((task, index) => {
+      updatedTasks.splice(deletedSelectedTaskIndices[index], 0, task);
+    });
+    setTasks(updatedTasks);
+    setDeletedSelectedTask([]);
+    setDeletedSelectedTaskIndices([]);
+  };
+
+  useEffect(() => {
+    undoDeleteSelectTasks();
+  }, [restoreDeletedSelectedTasks]);
+
+  // Function to handle bulk copy action
+  const handleBulkCopyAction = () => {
+    if (selectedTasks.length > 0) {
+      const copiedTasks = selectedTasks.map((task) => {
+        // Create a copy of each selected task
+        return { ...task };
+      });
+      setTasks([...tasks, ...copiedTasks]); // Add copied tasks to the task list
+      toast({
+        title: "Selected Tasks Copied",
+        description: "All selected tasks have been copied successfully",
+      });
+      setSelectedTasks([]);
     }
   };
 
   useEffect(() => {
     if (tasks.length > 0) {
       // Check if all tasks are selected
-      const allTasksSelected = selectedTask.length === tasks.length;
+      const allTasksSelected = selectedTasks.length === tasks.length;
 
       // Update select all checkbox
       setSelectAllChecked(allTasksSelected);
@@ -228,7 +283,7 @@ const TaskList = ({
       // If there are no tasks, uncheck the "Select All" checkbox
       setSelectAllChecked(false);
     }
-  }, [selectedTask, tasks]);
+  }, [selectedTasks, tasks]);
 
   return (
     <>
@@ -240,7 +295,7 @@ const TaskList = ({
                 <Checkbox
                   disabled={tasks.length === 0}
                   checked={
-                    tasks.length === selectedTask.length && selectAllChecked
+                    tasks.length === selectedTasks.length && selectAllChecked
                   }
                   className="h-4 w-4 mr-2"
                   onCheckedChange={() => {
@@ -293,26 +348,32 @@ const TaskList = ({
               )}
               <TableHead>Action</TableHead>
               <TableHead>
-                <div
-                  disabled={selectedTask.length === 0}
-                  className="flex items-center"
-                  variant="ghost"
-                >
-                  <DropdownMenu>
+                <div className="flex items-center">
+                  <DropdownMenu
+                    open={bulkSelectOpen}
+                    onOpenChange={setBulkSelectOpen}
+                  >
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost">
+                      <Button
+                        variant="ghost"
+                        disabled={selectedTasks.length === 0}
+                      >
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem
-                        className="text-red-500"
-                        onClick={handleBulkAction}
-                      >
-                        <Trash className="mr-2 h-4 w-4" />
-                        Delete Selected
+                      <DropdownMenuLabel>Bulk Actions</DropdownMenuLabel>
+                      <DropdownMenuItem onClick={handleBulkCopyAction}>
+                        <Copy className="h-4 w-4" />
+                        <span className="ml-2">Make Copies</span>
                       </DropdownMenuItem>
+                      <DeleteAlertDialog
+                        triggerFunction={handleBulkDeleteAction}
+                        desc={`This action cannot be undone. This will permanently delete all your
+                     tasks.`}
+                        btnText="Delete Tasks"
+                        btnYesText="Yes"
+                      />
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -326,7 +387,7 @@ const TaskList = ({
                   <div className="flex items-center">
                     <Checkbox
                       className="h-4 w-4 mr-2"
-                      checked={selectedTask?.includes(taskItem)}
+                      checked={selectedTasks?.includes(taskItem)}
                       onCheckedChange={() => {
                         toggleTaskSelect(taskItem);
                       }}
@@ -434,11 +495,13 @@ const TaskList = ({
                         triggerFunction={deleteTask}
                         desc={`This action cannot be undone. This will permanently delete your
                      task.`}
-                        btnText="Yes"
+                        btnText="Delete Task"
+                        btnYesText="Yes"
                       />
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
+                <TableCell></TableCell>
               </TableRow>
             ))}
           </TableBody>
