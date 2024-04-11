@@ -346,7 +346,7 @@ const TaskList = ({
     const timeoutId = setTimeout(() => {
       new Notification("Task Reminder", {
         body: taskName,
-        icon: "/path/to/icon.png", // Change to your icon path
+        // icon: "/path/to/icon.png", // TO DO - FOR LATER
       });
       // After triggering the notification, clear the reminder field
       const updatedTasks = [...tasks];
@@ -369,10 +369,10 @@ const TaskList = ({
 
     // Iterate over tasks and schedule notifications for those with reminders
     tasks.forEach((task, index) => {
-      if (task.reminder !== "") {
+      if (task?.reminder !== "") {
         const taskName = task.name;
-        const reminderTime = parseInt(task.reminder.split(" ")[0]);
-        const timeUnit = task.reminder.split(" ")[1]; // Get the time unit from the reminder
+        const reminderTime = parseInt(task?.reminder?.split(" ")[0]);
+        const timeUnit = task?.reminder?.split(" ")[1]; // Get the time unit from the reminder
         scheduleNotification(taskName, reminderTime, timeUnit, index);
       }
     });
